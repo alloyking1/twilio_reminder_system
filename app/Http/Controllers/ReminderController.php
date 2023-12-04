@@ -9,6 +9,7 @@ class ReminderController extends Controller
 {
     public function __invoke(Request $request)
     {
+        dd($request->all());
         $validated = $request->validate([
             'mobile_no' => 'required',
             'date' => 'required|date',
@@ -22,5 +23,6 @@ class ReminderController extends Controller
             'time' => $request->time,
             'message' => $request->message,
         ]);
+        return to_route('home');
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\ReminderController;
 use App\Models\Reminder;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return Inertia::render('Main');
+});
 
-Route::post('/reminder', Reminder::class)->name('reminder');
+Route::post('/reminder', ReminderController::class)->name('reminder');
