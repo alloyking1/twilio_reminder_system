@@ -34,7 +34,10 @@ class SendReminder extends Command
         $account_sid = env('TWILIO_SID');
         $account_token = env("TWILIO_TOKEN");
         $sending_number = env("TWILIO_NUMBER");
+        $twilio_whatsapp_sandbox_num = env("TWILIO_WHATSAPP_SANDBOX_NUMBER");
         $twilio_client = new Client($account_sid, $account_token);
+
+
 
         while (true) {
 
@@ -43,12 +46,24 @@ class SendReminder extends Command
 
             foreach ($reminders as $reminder) {
                 if ($reminder->timezoneoffset <= $now) {
+
                     $twilio_client->messages->create(
                         $reminder->mobile_no,
                         array("from" => $sending_number, "body" => "Reminder for: $reminder->message")
                     );
 
-                    //whatsapp message here
+                    try {
+                        $message = $twilio_client->messages->create(
+                            "whatsapp: $reminder->mobile_no", // to
+                            array(
+                                "from" => "whatsapp:$twilio_whatsapp_sandbox_num",
+                                "body" => "Reminder for: $reminder->message"
+                            )
+                        );
+                    } catch (\Exception $e) {
+                        dump('was not able to send whatsapp message, check your whatsapp sandbox configuration' . ' or this error: ' . $e);
+                    }
+
                     Reminder::where('id', $reminder->id)->update(['status' => '1']);
                     dump('Notification sent to' . $reminder->mobile_no);
                 }
