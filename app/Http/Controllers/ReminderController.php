@@ -10,20 +10,20 @@ class ReminderController extends Controller
 {
     public function __invoke(Request $request)
     {
-        //check form validation properly
+
         $validated = $request->validate([
-            'phone_num' => 'required',
+            'phone_num' => 'required|numeric|min:8',
             'date' => 'required|date',
             'time' => 'required',
             'message' => 'required',
         ]);
 
-        // dd($request->time);
         Reminder::create([
             'mobile_no' => $request->phone_num,
             'timezoneoffset' => Carbon::parse("{$request->date} {$request->time}"),
             'message' => $request->message,
         ]);
-        return redirect()->back();
+
+        return redirect()->back()->with('message', 'Reminder created');
     }
 }

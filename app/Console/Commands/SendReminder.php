@@ -36,24 +36,24 @@ class SendReminder extends Command
         $sending_number = env("TWILIO_NUMBER");
         $twilio_client = new Client($account_sid, $account_token);
 
-        // while (true) {
+        while (true) {
 
-        $now = Carbon::now('Africa/Lagos')->toDateTimeString();
-        $reminders = Reminder::where('status', '0')->get();
+            $now = Carbon::now('Africa/Lagos')->toDateTimeString();
+            $reminders = Reminder::where('status', '0')->get();
 
-        foreach ($reminders as $reminder) {
-            if ($reminder->timezoneoffset <= $now) {
-                $twilio_client->messages->create(
-                    $reminder->mobile_no,
-                    array("from" => $sending_number, "body" => "Reminder for: $reminder->message")
-                );
+            foreach ($reminders as $reminder) {
+                if ($reminder->timezoneoffset <= $now) {
+                    $twilio_client->messages->create(
+                        $reminder->mobile_no,
+                        array("from" => $sending_number, "body" => "Reminder for: $reminder->message")
+                    );
 
-                //whatsapp message here
-                Reminder::updated(['status' => '1']);
-                dump('Notification sent to' . $reminder->mobile_no);
+                    //whatsapp message here
+                    Reminder::where('id', $reminder->id)->update(['status' => '1']);
+                    dump('Notification sent to' . $reminder->mobile_no);
+                }
             }
+            \sleep(1);
         }
-        // \sleep(1);
-        // }
     }
 }
