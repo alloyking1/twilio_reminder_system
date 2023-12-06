@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('mobile_no');
             $table->string('timezoneoffset');
             $table->text('message');
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

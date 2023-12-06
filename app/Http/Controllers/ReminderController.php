@@ -4,25 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Reminder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ReminderController extends Controller
 {
     public function __invoke(Request $request)
     {
-        dd($request->all());
+        //check form validation properly
         $validated = $request->validate([
-            'mobile_no' => 'required',
+            'phone_num' => 'required',
             'date' => 'required|date',
             'time' => 'required',
             'message' => 'required',
         ]);
 
+        // dd($request->time);
         Reminder::create([
-            'mobile_no' => $request->mobile_no,
-            'date' => $request->date,
-            'time' => $request->time,
+            'mobile_no' => $request->phone_num,
+            'timezoneoffset' => Carbon::parse("{$request->date} {$request->time}"),
             'message' => $request->message,
         ]);
-        return to_route('home');
+        return redirect()->back();
     }
 }
