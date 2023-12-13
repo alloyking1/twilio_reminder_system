@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use Twilio\Rest\Client;
 use App\Models\Reminder;
+use Illuminate\Support\Facades\Mail;
 
 class SendReminder extends Command
 {
@@ -47,11 +48,24 @@ class SendReminder extends Command
             foreach ($reminders as $reminder) {
                 if ($reminder->timezoneoffset <= $now) {
 
+                    //SMS
                     $twilio_client->messages->create(
                         $reminder->mobile_no,
                         array("from" => $sending_number, "body" => "Reminder for: $reminder->message")
                     );
 
+                    //Email
+                    try {
+                        Mail::raw($reminder->message, function ($message) {
+                            $message
+                                ->to('$reminder->email')
+                                ->subject('Reminder Email');
+                        });
+                    } catch (\Exception $e) {
+                        dump('was not able to send Email, check that your email is configured correctly' . ' or this error: ' . $e);
+                    }
+
+                    //Whatsapp
                     try {
                         $message = $twilio_client->messages->create(
                             "whatsapp: $reminder->mobile_no", // to

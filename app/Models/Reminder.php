@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reminder extends Model
 {
     use HasFactory;
-    protected $fillable = ['mobile_no', 'timezoneoffset', 'message'];
+    protected $fillable = ['mobile_no', 'email', 'timezoneoffset', 'message',];
 
     protected $casts = [
         'timezoneoffset' => 'datetime:Y-m-d'

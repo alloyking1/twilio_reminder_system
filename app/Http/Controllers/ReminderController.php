@@ -13,6 +13,7 @@ class ReminderController extends Controller
 
         $validated = $request->validate([
             'phone_num' => 'required|numeric|min:8',
+            'email' => 'required|email',
             'date' => 'required|date',
             'time' => 'required',
             'message' => 'required',
@@ -20,6 +21,7 @@ class ReminderController extends Controller
 
         Reminder::create([
             'mobile_no' => $request->phone_num,
+            'email' => $request->email,
             'timezoneoffset' => Carbon::parse("{$request->date} {$request->time}"),
             'message' => $request->message,
         ]);

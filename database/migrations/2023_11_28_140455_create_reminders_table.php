@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('reminders', function (Blueprint $table) {
             $table->id();
             $table->string('mobile_no');
+            $table->string('email');
             $table->string('timezoneoffset');
             $table->text('message');
             $table->boolean('status')->default(0);
